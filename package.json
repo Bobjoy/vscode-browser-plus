@@ -1,6 +1,6 @@
 {
-  "name": "browser-plus",
-  "displayName": "browser-plus",
+  "name": "vscode-browser-plus",
+  "displayName": "vscode-browser-plus",
   "description": "Browser in VSCode",
   "version": "0.0.1",
   "publisher": "bobjoy",

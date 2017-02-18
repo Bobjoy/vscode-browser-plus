@@ -39,12 +39,18 @@ export function formatContent(port) {
 };
 
 export function createPreviewer() {
-    var viewColumn = +vscode.window.activeTextEditor.viewColumn;
+    var viewColumn = vscode.ViewColumn.One;
+
+    let editor = vscode.window.activeTextEditor;
+    if (vscode.window.activeTextEditor) {
+        viewColumn = +editor.viewColumn;
+    }
+    
     viewColumn = Math.min(viewColumn + 1, vscode.ViewColumn.Three);
 
     const previewUri = getUri('../../content.html');
 
-    return vscode.commands.executeCommand('vscode.previewHtml', previewUri, viewColumn, "Integrated Browser");
+    return vscode.commands.executeCommand('vscode.previewHtml', previewUri, viewColumn, "Browser");
 }
 
 export function getRunningServer() {

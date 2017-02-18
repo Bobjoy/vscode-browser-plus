@@ -73,7 +73,7 @@
       margin: 4px 3px;
     }
     
-    .toolbar .btns .btn:last-child:hover {
+    .toolbar .btns .btn:hover {
       background: #D5D5D5;
     }
     
@@ -122,7 +122,7 @@
     }
 
     function homepage() {
-      refresh('http://127.0.0.1:{{PORT}}');
+      refresh('http://127.0.0.1:30000');
     }
 
     function refresh(url) {
@@ -158,10 +158,10 @@
       <a class="btn" onclick="refresh();" title="刷新"><img class="icon" src="data:img/jpg;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAABE0lEQVQ4T72UYXECMRBGHw6oghYF4KCtkuKgdQA4qIOCAyQUB6AAJFRC5zFZJoRcjh837AyTuyS8fPvt5kYMHKOBeTwcOAOmgKOxBw5pjOTmwDpeWgq/gc8OS1xbAY4vwFsfUCUq2wHLTJFKfX8F/oBx2tME+odFUuBzLU7Ac1rw0E6g8o/lqQVRvz6yuSZQg3+Ad+C3Iq2EuaUJjHSfkkc5U7+i2vm8Xur5Ocoqt4B33YES2JdyDtVvC2NfqrKqMIqif/rYCvfYPhPAqleBTkbajjZvLSKTDeDzJbpuSjS2KgSblqGir9R3ztl/l3RrRckPa109lQm+gvUBXbdN4ue7Xm1zz0o/Hv756in07fLgCv8BrUM3FcRyAogAAAAASUVORK5CYII="
           alt="刷新"></a>
     </div>
-    <div class="group url"><input id="url" type="text" class="input" value="http://127.0.0.1:{{PORT}}"></div>
+    <div class="group url"><input id="url" type="text" class="input" value="http://127.0.0.1:30000"></div>
   </div>
   <div class="main">
-    <iframe id="previewer" src="http://127.0.0.1:{{PORT}}" frameborder="0" />
+    <iframe id="previewer" src="http://127.0.0.1:30000" frameborder="0" />
   </div>
 
 

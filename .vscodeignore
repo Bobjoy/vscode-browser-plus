@@ -6,5 +6,4 @@ src/**
 **/*.map
 .gitignore
 tsconfig.json
-content.html
 vsc-extension-quickstart.md
