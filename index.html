@@ -2,156 +2,169 @@
 <html lang="en">
 
 <head>
-    <meta name="viewport" content="width=device-width, height=device-height,user-scalable=no, initial-scale=1.0" />
-    <title>Document</title>
-    <style>
-        body {
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-            margin: 0;
-            padding: 0;
-        }
-        
-         ::-webkit-scrollbar {
-            width: 2px;
-            height: 2px;
-            background-color: #ffffff;
-        }
-        
-        .center {
-            margin: 0 auto;
-        }
-        
-        .mt20 {
-            margin-top: 20px;
-        }
-        
-        select {
-            display: block;
-        }
-        
-        .devices {
-            padding: 20px;
-        }
-        
-        #previewer {
-            display: block;
-            box-shadow: 0 0 5px #888888;
-            background-color: #f0f0f0;
-        }
-    </style>
-    <script>
-        var devices = [{
-            id: 'iphone_4s',
-            name: 'iPhone4s (320x480;Dpr 2)',
-            width: 320,
-            height: 480,
-            dpr: 2
-        }, {
-            id: 'iphone_5',
-            name: 'iPhone5 (320x568;Dpr 2)',
-            width: 320,
-            height: 568,
-            dpr: 2
-        }, {
-            id: 'iphone_6',
-            name: 'iPhone6 (375x667;Dpr 2)',
-            width: 375,
-            height: 667,
-            dpr: 2,
-            defaults: true
-        }, {
-            id: 'iphone_6p',
-            name: 'iPhone6 Plus (414x736;Dpr 3)',
-            width: 414,
-            height: 736,
-            dpr: 3
-        }, {
-            id: 'samsung_s5',
-            name: 'Galaxy S5 (384x640;Dpr 3)',
-            width: 384,
-            height: 640,
-            dpr: 3
-        }, {
-            id: 'nexus_4',
-            name: 'Nexus 4 (384x640;Dpr 2)',
-            width: 384,
-            height: 640,
-            dpr: 2
-        }, {
-            id: 'nexus_5',
-            name: 'Nexus 5 (360x640;Dpr 3)',
-            width: 360,
-            height: 640,
-            dpr: 3
-        }, {
-            id: 'nexus_5x',
-            name: 'Nexus 5x (411x731;Dpr 2.625)',
-            width: 411,
-            height: 731,
-            dpr: 2.625
-        }, {
-            id: 'nexus_6',
-            name: 'Nexus 6 (412x732;Dpr 3.5)',
-            width: 412,
-            height: 732,
-            dpr: 3.5
-        }];
+  <meta name="viewport" content="width=device-width, height=device-height,user-scalable=no, initial-scale=1.0" />
+  <title>Document</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      width: 100%;
+      display: flex;
+      flex-flow: column wrap;
+      overflow: hidden;
+      background: #FFF;
+    }
+    
+     ::-webkit-scrollbar {
+      width: 2px;
+      height: 2px;
+      background-color: #ffffff;
+    }
+    
+    input {
+      border-color: #b5b5b5;
+      border-radius: 5px;
+      background-color: #FFF;
+      border: 1px solid #D5D5D5;
+      padding: 5px 4px 6px;
+      box-shadow: none !important;
+      min-width: 200px;
+      text-indent: 5px;
+      font-size: 14px;
+    }
+    
+    .toolbar {
+      width: 100%;
+      height: 36px;
+      flex: 1;
+      display: flex;
+      flex-flow: row wrap;
+    }
+    
+    .toolbar .group {
+      flex: 1;
+      display: flex;
+    }
+    
+    .toolbar .btns {
+      width: 200px;
+      display: flex;
+      flex-flow: row nowrap;
+      align-items: center;
+      text-align: center;
+    }
+    
+    .toolbar .btns .btn {
+      width: 24px;
+      height: 24px;
+      border-radius: 5px;
+      cursor: default;
+    }
+    
+    .btn {
+      margin-left: 4px
+    }
+    
+    .btn+.btn {
+      margin: 4px 3px;
+    }
+    
+    .toolbar .btns .btn:hover {
+      background: #D5D5D5;
+    }
+    
+    .toolbar .url {
+      flex: 8;
+      display: flex;
+      flex-flow: row nowrap;
+    }
+    
+    .toolbar .url .input {
+      flex: 1;
+      margin: 3px 5px 3px 0;
+    }
+    
+    .main {
+      flex: 10;
+    }
+    
+    .main iframe {
+      width: 100%;
+    }
+    
+    .icon {
+      width: 20px;
+      height: 20px;
+      margin: 2px;
+    }
+  </style>
 
-        function refreshPreviewer(device) {
-            const previewer = document.querySelector('#previewer');
-            const {
-                width,
-                height
-            } = device;
-            previewer.style.width = width + "px";
-            previewer.style.height = height + "px";
-            previewer.contentWindow.location.reload();
-        }
+  <script>
+    function $(eid) {
+      return document.getElementById(eid)
+    }
 
-        function changeDevice(index) {
-            const device = devices[index];
-            refreshPreviewer(device);
-        }
+    function adjustFrameHeight() {
+      var clientHeight = document.documentElement.clientHeight;
+      $('previewer').height = clientHeight - 36;
+    }
 
-        function createSelect() {
-            document.querySelector('#devicesSelect').innerHTML = devices.map(device => {
-                if (device.defaults) {
-                    return `<option selected="selected">${device.name}</option>`
-                }
-                return `<option>${device.name}</option>`
-            }).join('');
-        }
+    function backward() {
 
-        function refresh() {
-            createSelect();
-            document.querySelector('#previewer').onload = function() {
-                const doc = this.contentWindow.document;
-                const style = doc.createElement('style');
-                style.innerText = `
-                    ::-webkit-scrollbar {
-                        width: 2px;
-                        height: 2px;
-                        background-color: #ffffff;
-                    }
-                `;
-                doc.querySelector('head').appendChild(style);
-            }
+    }
+
+    function forward() {
+
+    }
+
+    function homepage() {
+      refresh('http://127.0.0.1:{{PORT}}');
+    }
+
+    function refresh(url) {
+      $('previewer').src = url || $('url').value;
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+      // 自适应高度
+      adjustFrameHeight();
+      // 绑定事件
+      $('url').addEventListener('keyup', function(e) {
+        if (e.keyCode === 13) {
+          refresh(this.value);
         }
-        document.addEventListener('DOMContentLoaded', function() {
-            refresh();
-        }, false);
-    </script>
+      }, false)
+    }, false);
+
+    window.onresize = function() {
+      adjustFrameHeight();
+    }
+  </script>
 </head>
 
 <body>
-    <div class="devices">
-        <select name="" id="devicesSelect" class="center" onchange="changeDevice(this.selectedIndex)"></select>
+  <div class="toolbar">
+    <div class="group btns">
+      <a class="btn" onclick="backward();" title="后退"><img class="icon" src="data:img/jpg;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAAnUlEQVQ4T8XU4Q1AMBCG4dcEjMAGVrKBkWzCCGzCBnKJJiXau1YTfkkkz31316oo/FSFPX4D+6uTVevIklCw+YI6YI+hGuiwBhiA6UvCZEyKhRJmYSEwG3sDfUyGr24V2IDRzfbZsoALUAOHEZSiQVAK+ahps/7mY0txSZPQ2DnMSmo52ElJNdCfqby3X6+em3fRn4N2fW/fLS3/C5536x4VNPnHnQAAAABJRU5ErkJggg=="
+          alt="后退"></a>
+      <a class="btn" onclick="forward();" title="前进"><img class="icon" src="data:img/jpg;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAAnklEQVQ4T8XU4Q2CMBCG4bcT6AawgYyAG7KRjOAIjgATQE4hwQa570wTmvRf8+S7u7aJwisV9jgNbJZKnl5FasIXcAHuwCGqgpawByYPVUGrVEIjoIRGQRfNwQ64eZME6mUPeU/3wPWKHLkGVsAItNvJ/1vyA96P4guzBFHQ0v/EoqCLRUAJi4D29K57Pcsnp/aw+OcgXM3PETXheeAMv/cgFZuJHH4AAAAASUVORK5CYII="
+          alt="前进"></a>
+      <a class="btn" onclick="homepage();" title="首页"><img class="icon" src="data:img/jpg;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAAwElEQVQ4T+3UYQ3CMBDF8f8c4AAkIAEcIAEpSMIBSEACOMAB5JEeaZbuXUf2kSWXJVvza3tv68DC17CwRw+4Ai5l4j3wdIvIwMBi3AuwqANrbFdWdQUsOgWOsdimnlu0BU5h0TqLjsEMS9Ea7MUsGuBcbBIN8AxsAKW5rRJ1n1wkfytB6X4MUJiSVClF1Sn5i/ReqEo7VN1bKf8Cfuf+g59WqIdrNTgJRUE+Sii2h/psDp3nZARowU6rPSw7D2fjbzNDPhWe0Dx+AAAAAElFTkSuQmCC"
+          alt="首页"></a>
+      <a class="btn" onclick="refresh();" title="刷新"><img class="icon" src="data:img/jpg;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAABE0lEQVQ4T72UYXECMRBGHw6oghYF4KCtkuKgdQA4qIOCAyQUB6AAJFRC5zFZJoRcjh837AyTuyS8fPvt5kYMHKOBeTwcOAOmgKOxBw5pjOTmwDpeWgq/gc8OS1xbAY4vwFsfUCUq2wHLTJFKfX8F/oBx2tME+odFUuBzLU7Ac1rw0E6g8o/lqQVRvz6yuSZQg3+Ad+C3Iq2EuaUJjHSfkkc5U7+i2vm8Xur5Ocoqt4B33YES2JdyDtVvC2NfqrKqMIqif/rYCvfYPhPAqleBTkbajjZvLSKTDeDzJbpuSjS2KgSblqGir9R3ztl/l3RrRckPa109lQm+gvUBXbdN4ue7Xm1zz0o/Hv756in07fLgCv8BrUM3FcRyAogAAAAASUVORK5CYII="
+          alt="刷新"></a>
     </div>
-    <div class="iframe">
-        <iframe id="previewer" class="center" src="http://127.0.0.1:$$PORT$$" height="667" width="375" />
-    </div>
+    <div class="group url"><input id="url" type="text" class="input" value="http://127.0.0.1:{{PORT}}"></div>
+  </div>
+  <div class="main">
+    <iframe id="previewer" frameborder="0" />
+  </div>
+
+
 </body>
 
 </html>
