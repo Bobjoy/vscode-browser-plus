@@ -10,17 +10,28 @@
   "categories": [
     "Debuggers", "Other"
   ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/bobjoy/vscode-browser-plus.git"
+  },
+  "homepage": "https://github.com/bobjoy/vscode-browser-plus",
+  "bugs": {
+    "url": "https://github.com/bobjoy/vscode-browser-plus/issues"
+  },
   "activationEvents": [
     "onCommand:extension.openBrowser"
   ],
   "main": "./out/src/extension",
   "contributes": {
-    "commands": [
-      {
-        "command": "extension.openBrowser",
-        "title": "Open Browser"
-      }
-    ]
+    "commands": [{
+      "command": "extension.openBrowser",
+      "title": "Open Browser"
+    }],
+    "keybindings": [{
+      "command": "extension.openBrowser",
+      "key": "ctrl+f1",
+      "mac": "cmd+f1"
+    }]
   },
   "scripts": {
     "vscode:prepublish": "tsc -p ./",
