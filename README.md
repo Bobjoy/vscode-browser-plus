@@ -6,7 +6,7 @@
 
 ## 使用方法
 
-![](images/contextmenu.png)
+![](https://raw.githubusercontent.com/Bobjoy/vscode-browser-plus/master/images/contextmenu.png)
 
 选择 `Open Browser`
 
