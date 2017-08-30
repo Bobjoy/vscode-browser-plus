@@ -10,6 +10,10 @@
 
 选择 `Open Browser`
 
+## 配置
+
+`browser.preview.port` 指定预览端口，默认10086
+
 ## 快捷键
 
 * Window `Ctrl+F1`
