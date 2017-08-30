@@ -2,91 +2,104 @@
 
 import * as path from "path";
 import * as child_process from "child_process";
-import * as vscode from "vscode";
+import { commands, ViewColumn, window, workspace } from "vscode";
 import * as fs from 'mz/fs';
 
-import {getUri, getPath, logInfo, logError} from './libs/utils';
+import { getUri, getPath, logInfo, logError } from './libs/utils';
 
 import * as portServices from './libs/port';
 
 export function startServer(port): PromiseLike<any> {
-    let options = `--server --port ${port} --files "css/*.css, *.html" --no-notify --no-open`;
-    return new Promise((resolve, reject) => {
-        let cp = child_process.exec(`node ${path.join(__dirname, '../../node_modules/browser-sync/bin/browser-sync')} start ${options}`, {
-            cwd: vscode.workspace.rootPath,
-            encoding: "utf-8"
-        });
+	window.showErrorMessage(port)
+	let options = `--server --port ${port} --files "css/*.css, *.html" --no-notify --no-open`;
+	return new Promise((resolve, reject) => {
+		let cp = child_process.exec(`node ${path.join(__dirname, '../../node_modules/browser-sync/bin/browser-sync')} start ${options}`, {
+			cwd: workspace.rootPath,
+			encoding: "utf-8"
+		});
 
-        cp.stdout.once('data', data => {
-            resolve();
-        });
+		cp.stdout.once('data', data => {
+			resolve();
+		});
 
-        cp.stderr.on('data', err => {
-            logError(JSON.stringify(err));
-            reject(err);
-        })
-    });
+		cp.stderr.on('data', err => {
+			logError(JSON.stringify(err));
+			reject(err);
+		})
+	});
 }
 
-export function formatContent(port) {
-    const previewContentTpl = getPath('../../index.html');
-    const previewContent = getPath('../../content.html');
+export function formatContent(port: number) {
+	const previewContentTpl = getPath('../../index.html');
+	const previewContent = getPath('../../content.html');
 
-    return fs.readFile(previewContentTpl)
-        .then(data => {
-            return fs.writeFile(previewContent, data.toString().replace(/{{PORT}}/g, port.toString()))
-        })
+	return fs.readFile(previewContentTpl)
+		.then(data => {
+			return fs.writeFile(previewContent, data.toString().replace(/{{PORT}}/g, port))
+		})
 };
 
 export function createPreviewer() {
-    var viewColumn = vscode.ViewColumn.One;
+	var viewColumn = ViewColumn.One;
 
-    let editor = vscode.window.activeTextEditor;
-    if (vscode.window.activeTextEditor) {
-        viewColumn = +editor.viewColumn;
-    }
-    
-    viewColumn = Math.min(viewColumn + 1, vscode.ViewColumn.Three);
+	let editor = window.activeTextEditor;
+	if (window.activeTextEditor) {
+		viewColumn = +editor.viewColumn;
+	}
 
-    const previewUri = getUri('../../content.html');
+	viewColumn = Math.min(viewColumn + 1, ViewColumn.Three);
 
-    return vscode.commands.executeCommand('vscode.previewHtml', previewUri, viewColumn, "Browser");
+	const previewUri = getUri('../../content.html');
+
+	return commands.executeCommand('vscode.previewHtml', previewUri, viewColumn, "Browser");
 }
 
-export function getRunningServer() {
-    return fs.readFile(getPath('../../port'))
-        .then(data => {
-            return portServices.isFreePort(data.toString())
-                .then(res => {
-                    return !res;
-                });
-        })
-        .catch(err => {
-            return false;
-        });
+/**
+ *
+ * Check Server Running
+ *
+ * @export
+ * @returns
+ */
+export function getRunningServer(port: number) {
+	return portServices.isFreePort(port)
+		.then(res => {
+			return !res;
+		});
 }
 
+/**
+ *
+ * Open Preview Window
+ *
+ * @export
+ * @returns
+ */
 export function startPreview() {
-return getRunningServer()
-    .then(running => {
-        if (running) {
-            return createPreviewer();
-        }
+	let port = 10086;
 
-        return portServices.getFreePort()
-            .then(port => {
-                return Promise.all([
-                        formatContent(port),
-                        startServer(port)
-                    ])
-                    .then(() => {
-                        return Promise.all([createPreviewer()]);
-                    });
-            });
-    })
-    .catch(err => {
-        vscode.window.showErrorMessage(`打开预览失败[${err}]！`)
-    });
-    
+	let settings = workspace.getConfiguration('browser');
+	if (settings) {
+		port = settings.get('preview.port', port);
+	}
+
+	return getRunningServer(port)
+		.then(running => {
+			if (running) {
+				return createPreviewer();
+			}
+
+			return Promise.all([
+				formatContent(port),
+				startServer(port)
+			])
+				.then(() => {
+					return Promise.all([createPreviewer()]);
+				});
+		})
+		.catch(err => {
+			window.showErrorMessage(`Open browser preview faild[${err}]！`)
+		});
+
 
 }

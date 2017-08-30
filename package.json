@@ -1,55 +1,67 @@
 {
-  "name": "vscode-browser-plus",
-  "displayName": "vscode-browser-plus",
-  "description": "Browser in VSCode",
-  "version": "0.0.1",
-  "publisher": "bobjoy",
-  "engines": {
-    "vscode": "^1.5.0"
-  },
-  "categories": [
-    "Debuggers", "Other"
-  ],
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/bobjoy/vscode-browser-plus.git"
-  },
-  "homepage": "https://github.com/bobjoy/vscode-browser-plus",
-  "bugs": {
-    "url": "https://github.com/bobjoy/vscode-browser-plus/issues"
-  },
-  "activationEvents": [
-    "onCommand:extension.openBrowser"
-  ],
-  "main": "./out/src/extension",
-  "contributes": {
-    "commands": [{
-      "command": "extension.openBrowser",
-      "title": "Open Browser"
-    }],
-    "keybindings": [{
-      "command": "extension.openBrowser",
-      "key": "ctrl+f1",
-      "mac": "cmd+f1"
-    }]
-  },
-  "scripts": {
-    "vscode:prepublish": "tsc -p ./",
-    "compile": "tsc -watch -p ./",
-    "postinstall": "node ./node_modules/vscode/bin/install",
-    "test": "node ./node_modules/vscode/bin/test"
-  },
-  "devDependencies": {
-    "typescript": "^2.0.3",
-    "vscode": "^1.0.0",
-    "mocha": "^2.3.3",
-    "@types/node": "^6.0.40",
-    "@types/mocha": "^2.2.32"
-  },
-  "dependencies": {
-    "browser-sync": "^2.18.8",
-    "detect-port": "^1.1.0",
-    "mz": "^2.6.0",
-    "portfinder": "^1.0.13"
-  }
+	"name": "vscode-browser-plus",
+	"displayName": "vscode-browser-plus",
+	"description": "Browser in VSCode",
+	"version": "0.0.2",
+	"publisher": "bobjoy",
+	"engines": {
+		"vscode": "^1.5.0"
+	},
+	"categories": [
+		"Debuggers",
+		"Other"
+	],
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/bobjoy/vscode-browser-plus.git"
+	},
+	"homepage": "https://github.com/bobjoy/vscode-browser-plus",
+	"bugs": {
+		"url": "https://github.com/bobjoy/vscode-browser-plus/issues"
+	},
+	"activationEvents": [
+		"onCommand:extension.openBrowser"
+	],
+	"main": "./out/src/extension",
+	"contributes": {
+		"configuration": {
+			"type": "object",
+			"title": "Browser Plus",
+			"properties": {
+				"browser.preview.port": {
+					"type": "integer",
+					"default": 10086,
+					"description": "The preview server port number."
+				}
+			}
+		},
+		"commands": [{
+			"command": "extension.openBrowser",
+			"title": "Open Browser"
+		}],
+		"keybindings": [{
+			"command": "extension.openBrowser",
+			"key": "ctrl+f1",
+			"mac": "cmd+f1"
+		}]
+	},
+	"scripts": {
+		"vscode:prepublish": "tsc -p ./",
+		"compile": "tsc -watch -p ./",
+		"postinstall": "node ./node_modules/vscode/bin/install",
+		"test": "node ./node_modules/vscode/bin/test"
+	},
+	"devDependencies": {
+		"typescript": "^2.0.3",
+		"vscode": "^1.0.0",
+		"mocha": "^2.3.3",
+		"@types/node": "^6.0.40",
+		"@types/mocha": "^2.2.32"
+	},
+	"dependencies": {
+		"browser-sync": "^2.18.8",
+		"detect-port": "^1.1.0",
+		"mz": "^2.6.0",
+		"portfinder": "^1.0.13"
+	}
 }
